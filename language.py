@@ -1,4 +1,10 @@
 import requests
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+# Define your SQLAlchemy models below
+
 
 def fetch_vocabulary(language):
     # API call to fetch vocabulary
