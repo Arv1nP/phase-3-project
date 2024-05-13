@@ -1,5 +1,5 @@
 import requests
-from sqlalchemy.ext.declarative import declarative_base
+
 
 class Fetch_from_api():
     def __init__(self, data):

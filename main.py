@@ -1,6 +1,7 @@
 import click
 from cli import progress, vocabulary, translate, synonyms
-from user import User
+from user import UserHandler
+from data_structures import create_session, close_session,engine
 
 @click.command()
 def user():
@@ -8,16 +9,25 @@ def user():
     click.echo("Press 2 to Login.")
     choice = click.prompt("Login or Register if you do not have an account", type=int)
 
+    session = create_session(engine)
+    
     if choice == 1:
         click.echo("Register")
-        click.prompt("Username:", type=str)
-        click.prompt("Password:", type=str)
+        username = click.prompt("Username:", type=str)
+        password = click.prompt("Password:", type=str, hide_input=False)
+        if UserHandler.register(session, username, password):
+            click.echo("Registration successful!")
     elif choice == 2:
         click.echo("Login")
-        click.prompt("Username:", type=str)
-        click.prompt("Password:", type=str)
+        username = click.prompt("Username:", type=str)
+        password = click.prompt("Password:", type=str, hide_input=False)
+        if UserHandler.login(session, username, password):
+            click.echo("Login successful!")
+        else:
+            click.echo("Invalid username or password.")
     else:
         click.echo("Invalid choice. Please choose a valid option.")
+    session.close()
 
 @click.command()
 @click.option("--name", prompt="Enter your name", help="The user's name")
@@ -46,5 +56,14 @@ def main(name):
         click.echo("Invalid choice. Please choose a valid option.")
 
 if __name__ == "__main__":
+    # Create session
+    session = create_session(engine)
+    
+    # Call user command
     user()
+    
+    # Call main command
     main()
+    
+    # Close session
+    close_session(session)
