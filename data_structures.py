@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Integer
 
 Base = declarative_base()
 engine = create_engine('sqlite:///language_learning.db')
@@ -11,6 +11,9 @@ class User(Base):
 
     username = Column(String, primary_key=True)
     password = Column(String)
+    words_learned_en = Column(String, default=0)
+    words_learned_fr = Column(String, default=0)
+    words_learned_it = Column(String, default=0)
 
 def create_session(engine):
     """Create and return a new session"""

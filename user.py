@@ -1,35 +1,46 @@
-from data_structures import User  # Assuming User is imported from data_structures
+import hashlib
+from data_structures import User  # Importing the User model from data_structures module
 
 class UserHandler:
+    def __init__(self, session, username, password):
+        self.session = session
+        self.username = username
+        self.password = password
 
-    @staticmethod
-    def register(session, username, password):
+    def register(self):
         try:
-            user = session.query(User).filter_by(username=username).first()
+            # Check if the username already exists
+            user = self.session.query(User).filter_by(username=self.username).first()
+            print("Existing user:", user)  # Debug statement
             if user:
-                print("Username already exists")
-                return False
+                return False  # Username already exists
             else:
-                new_user = User(username=username, password=password)
-                session.add(new_user)
-                session.commit()
-                print("User registered successfully!")
-                return True
+                # Hash the password before storing it
+                hashed_password = hashlib.sha256(self.password.encode()).hexdigest()
+                print("Hashed password:", hashed_password)  # Debug statement
+                new_user = User(username=self.username, password=hashed_password)
+                self.session.add(new_user)
+                self.session.commit()
+                return True  # Registration successful
         except Exception as e:
-            print(f"An error occurred during registration: {e}")
-            session.rollback()
+            print({e})
+            self.session.rollback()
             return False
 
-    @staticmethod
-    def login(session, username, password):
+    def login(self):
         try:
-            user = session.query(User).filter_by(username=username, password=password).first()
+            # Retrieve user by username
+            user = self.session.query(User).filter_by(username=self.username).first()
+            print("User found:", user)
             if user:
-                print("Login successful!")
-                return True
-            else:
-                print("Invalid username or password. Please try again.")
-                return False
+                # Hash the input password and compare with the stored hashed password
+                input_password_hash = hashlib.sha256(self.password.encode()).hexdigest()
+                if user.password == input_password_hash:
+                    return True  # Login successful
+            return False  # Either user not found or incorrect password
         except Exception as e:
-            print(f"An error occurred during login: {e}")
+            print({e})
             return False
+        
+
+    

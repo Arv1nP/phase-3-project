@@ -1,6 +1,7 @@
 import requests
 
 
+
 class Fetch_from_api():
     def __init__(self, data):
         self.data = data
@@ -10,7 +11,8 @@ class Fetch_from_api():
         url = f"{self.base_url}?lang={self.data}&number=3" #Fetch request url and parameters
         response = requests.get(url)
         if response.status_code == 200:
-            return response.json() #Result
+            lang = self.data
+            return response.json()
         else:
             print(f"Error: {response.status_code}")
 
@@ -45,3 +47,5 @@ class Fetch_from_api():
             return translation_data
         else:
             print(f"Error: {response.status_code}")
+
+

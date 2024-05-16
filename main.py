@@ -1,7 +1,8 @@
 import click
-from cli import progress, vocabulary, translate, synonyms
+from cli import translate, synonyms, vocabulary, progress
 from user import UserHandler
-from data_structures import create_session, close_session,engine
+from data_structures import create_session, close_session, engine
+
 
 @click.command()
 def user():
@@ -10,29 +11,31 @@ def user():
     choice = click.prompt("Login or Register if you do not have an account", type=int)
 
     session = create_session(engine)
+
     
     if choice == 1:
         click.echo("Register")
         username = click.prompt("Username:", type=str)
         password = click.prompt("Password:", type=str, hide_input=False)
-        if UserHandler.register(session, username, password):
+        if UserHandler(session, username, password).register(): #If returned true then echo following
             click.echo("Registration successful!")
+            click.echo("Try and login now.")
+            return user() #Return to login menu so they can login
     elif choice == 2:
         click.echo("Login")
         username = click.prompt("Username:", type=str)
         password = click.prompt("Password:", type=str, hide_input=False)
-        if UserHandler.login(session, username, password):
+        if UserHandler(session, username, password).login(): #If returned true then main
             click.echo("Login successful!")
+            return menu()  
         else:
-            click.echo("Invalid username or password.")
+            click.echo("Invalid username or password. Please try again.")
     else:
-        click.echo("Invalid choice. Please choose a valid option.")
-    session.close()
+        click.echo("Invalid choice. Please choose a valid option.")    
 
 @click.command()
-@click.option("--name", prompt="Enter your name", help="The user's name")
-def main(name):
-    click.echo(f"Hi {name}, welcome to the Language Learning CLI Application!")
+def menu():  
+    click.echo("Hi there, welcome to the Language Learning CLI Application!")
     click.echo("Please choose an option to continue:")
     click.echo("Press 1 to start learning vocabulary.")
     click.echo("Press 2 to translate words.")
@@ -51,19 +54,20 @@ def main(name):
     elif choice == 4:
         progress()
     elif choice == 5:
-        click.echo("Exiting...")
+        close_session(session)
+        click.echo("Logging out...")
     else:
         click.echo("Invalid choice. Please choose a valid option.")
+
+    
 
 if __name__ == "__main__":
     # Create session
     session = create_session(engine)
     
-    # Call user command
-    user()
+    # If user is logged in then
+    if user():
+      # Call main command
+      menu()  
+
     
-    # Call main command
-    main()
-    
-    # Close session
-    close_session(session)
