@@ -1,11 +1,13 @@
 import click
-from cli import translate, synonyms, vocabulary, progress
 from user import UserHandler
 from data_structures import create_session, close_session, engine
+from language_api import Fetch_from_api
 
 
 @click.command()
 def user():
+    global session
+    global username
     click.echo("Press 1 to Register.")
     click.echo("Press 2 to Login.")
     choice = click.prompt("Login or Register if you do not have an account", type=int)
@@ -35,7 +37,7 @@ def user():
 
 @click.command()
 def menu():  
-    click.echo("Hi there, welcome to the Language Learning CLI Application!")
+    click.echo(f"Hi {username}, welcome to the Language Learning CLI Application!")
     click.echo("Please choose an option to continue:")
     click.echo("Press 1 to start learning vocabulary.")
     click.echo("Press 2 to translate words.")
@@ -59,6 +61,124 @@ def menu():
     else:
         click.echo("Invalid choice. Please choose a valid option.")
 
+@click.group()
+def cli():
+    pass   
+
+@cli.command()
+def vocabulary():
+        click.echo("Please choose a language:")
+        click.echo("Press 1 for English.")
+        click.echo("Press 2 for French.")
+        click.echo("Press 3 for Italian.")
+        click.echo("Press 4 to go back.")
+
+        choice = click.prompt("Enter your choice", type=int)
+        lang = ("en" if choice == 1 else ("fr" if choice == 2 else "it"))
+        api = Fetch_from_api(lang)  # Instantiate the Fetch_from_api class with the chosen language
+
+        if choice in [1, 2, 3]:
+            vocabulary_data = api.fetch_vocabulary()  # Fetch vocabulary for the chosen language
+            update = UserHandler(session, username)
+            update.progress(lang)
+            click.echo(f"{vocabulary_data}, Now write them down")  # Display the fetched vocabulary data
+            
+
+            btn = click.prompt("Press 1 to go back", type=int)
+            click.echo("Press 2 to grab somemore words.")
+            if btn == 1:
+                 click.echo("Returning back to the main menu...")
+                 return menu()
+            elif btn ==2:
+                vocabulary()
+            else: 
+                 click.echo("Invalid choice. Please choose a valid option.")
+
+        elif choice == 4:
+            click.echo("Returning back...")
+            return menu()
+        else:
+            click.echo("Invalid choice. Please choose a valid option.")
+
+
+@cli.command()
+def translate():
+    click.echo("Please choose a language you want to serach from:")
+    click.echo("Press 1 for English.")
+    click.echo("Press 2 for French.")
+    click.echo("Press 3 for Italian.")
+    click.echo("Press 4 to go back.")
+
+    choice_from = click.prompt("Enter your choice", type=int)
+    if choice_from in [1,2,3]:
+      lang_from = "eng" if choice_from == 1 else ("fra" if choice_from == 2 else "ita")
+    elif choice_from == 4:
+            click.echo("Returning back...")
+            return menu()
+    else:
+        click.echo("Invalid choice. Please choose a valid option.")
+
+
+    click.echo("Please choose a language you want to serach to:")
+    click.echo("Press 1 for English.")
+    click.echo("Press 2 for French.")
+    click.echo("Press 3 for Italian.")
+    click.echo("Press 4 to go back.")
+
+    choice_to = click.prompt("Enter your choice", type=int)
+    if choice_to in [1,2,3]:
+      lang_to = "eng" if choice_to == 1 else ("fra" if choice_to == 2 else "ita")
+    elif choice_to == 4:
+            click.echo("Returning back...")
+            return menu()
+    else:
+        click.echo("Invalid choice. Please choose a valid option.")
+
+    input = click.prompt("Enter word", type=str).lower()
+    api = Fetch_from_api(input)
+    response = api.fetch_translation(lang_from,lang_to)
+    click.echo(response)
+    back_btn = click.prompt("Press 1 to go back", type=int)
+    if back_btn == 1:
+        click.echo("Returning back to the main menu...")
+        return menu()
+    else: 
+        click.echo("Invalid choice. Please choose a valid option.")
+    
+
+
+
+@cli.command()
+def synonyms():
+    word = click.prompt("Search up related words", type=str)
+    api = Fetch_from_api(word)  # You may need to pass the language here
+    synonym_data = api.fetch_synonyms()  # Pass the word to the fetch_synonyms method
+    click.echo(synonym_data)
+    back_btn = click.prompt("Press 1 to go back", type=int)
+    if back_btn == 1:
+        click.echo("Returning back to the main menu...")
+        return menu()
+    else: 
+        click.echo("Invalid choice. Please choose a valid option.")
+
+@cli.command()
+def progress():
+    click.echo("Here is your progress of English, French and Italian.")
+    click.echo("You have learnt this many words from each language")
+
+    progress = UserHandler(session, username)
+    user_progress = progress.get_progress()
+    click.echo(user_progress)
+
+    
+
+    back_btn = click.prompt("Press 1 to go back", type=int)
+    if back_btn == 1:
+        click.echo("Returning back to the main menu...")
+        return menu()
+    else:
+        click.echo("Invalid choice. Please choose a valid option.")
+
     
 
 if __name__ == "__main__":
@@ -68,6 +188,7 @@ if __name__ == "__main__":
     # If user is logged in then
     if user():
       # Call main command
-      menu()  
+      menu()
+      cli()  
 
     

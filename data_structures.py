@@ -11,9 +11,9 @@ class User(Base):
 
     username = Column(String, primary_key=True)
     password = Column(String)
-    words_learned_en = Column(String, default=0)
-    words_learned_fr = Column(String, default=0)
-    words_learned_it = Column(String, default=0)
+    words_learned_en = Column(Integer, default=0)
+    words_learned_fr = Column(Integer, default=0)
+    words_learned_it = Column(Integer, default=0)
 
 def create_session(engine):
     """Create and return a new session"""
