@@ -44,7 +44,6 @@ class UserHandler:
         try:
             # Retrieve user by username
             user = self.session.query(User).filter_by(username=self.username).first()
-            print("User found:", user)
             if user:
                 if lang == 'en':
                     user.words_learned_en += 3
@@ -76,7 +75,7 @@ class UserHandler:
                 print("User not found.")
                 return None
         except Exception as e:
-            print(f"Error fetching progress: {e}")
+            print({e})
             return None
             
 

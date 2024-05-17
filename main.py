@@ -83,9 +83,9 @@ def vocabulary():
             update.progress(lang)
             click.echo(f"{vocabulary_data}, Now write them down")  # Display the fetched vocabulary data
             
-
-            btn = click.prompt("Press 1 to go back", type=int)
-            click.echo("Press 2 to grab somemore words.")
+            click.echo("Press 1 to go back")
+            btn = click.prompt("Press 2 to grab somemore words.", type=int)
+            
             if btn == 1:
                  click.echo("Returning back to the main menu...")
                  return menu()
