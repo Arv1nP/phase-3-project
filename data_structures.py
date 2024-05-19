@@ -34,8 +34,7 @@ if __name__ == "__main__":
         engine = create_engine(DATABASE_URL)
         Base.metadata.create_all(engine)
         session = create_session(engine)
-        # Do something with the session
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print({e})
     finally:
-        close_session(session)  # Make sure to close the session even if an exception occurs
+        close_session(session)  # Make sure the session gets closed no matter what
