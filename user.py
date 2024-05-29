@@ -1,5 +1,5 @@
 import hashlib
-from data_structures import User  # Importing the User model from data_structures module
+from data_structures import User, UserInfo, Note  # Importing the User model from data_structures module
 
 class UserHandler:
     def __init__(self, session, username, password=None):
@@ -7,7 +7,7 @@ class UserHandler:
         self.username = username
         self.password = password
 
-    def register(self):
+    def register(self, email):
         try:
             # Check if the username already exists
             user = self.session.query(User).filter_by(username=self.username).first()
@@ -19,6 +19,12 @@ class UserHandler:
                 new_user = User(username=self.username, password=hashed_password)
                 self.session.add(new_user)
                 self.session.commit()
+
+                # Add user information (email)
+                user_info = UserInfo(username=self.username, email=email)
+                self.session.add(user_info)
+                self.session.commit() 
+
                 return True  # Registration successful
         except Exception as e:
             print({e})
@@ -77,9 +83,40 @@ class UserHandler:
         except Exception as e:
             print({e})
             return None
+        
+
+    def add_note(self, note, words, lang, title):
+        try:
+            user = self.session.query(User).filter_by(username=self.username).first()
+            if user:
+                new_note = Note(username=self.username, note=note, words=words, lang=lang, title=title)
+                self.session.add(new_note)
+                self.session.commit()
+
+                return True
             
+            if not user:
+                print("User not found!")
+                return False
+        
+        except Exception as e:
+            print({e})
+            return None 
+        
 
-    
-
-
-    
+    def get_notes(self):
+        try:
+            user = self.session.query(User).filter_by(username=self.username).first()
+            if user:
+                notes = self.session.query(Note).filter_by(username=self.username).order_by(Note.id.desc()).all()
+                formatted_notes = [
+                    f"Language: {note.lang}, Words: {note.words}, Title: {note.title}, Note: {note.note}"
+                    for note in notes
+                ]
+                result = "\n".join(formatted_notes)
+                return result
+                
+        except Exception as e:
+            print({e})
+            return None
+        

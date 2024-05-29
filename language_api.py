@@ -11,7 +11,6 @@ class Fetch_from_api():
         url = f"{self.base_url}?lang={self.data}&number=3" #Fetch request url and parameters
         response = requests.get(url)
         if response.status_code == 200:
-            lang = self.data
             return response.json()
         else:
             print(f"Error: {response.status_code}")
@@ -32,6 +31,7 @@ class Fetch_from_api():
             print(f"Error: {response.status_code}, Spelling mistake could be the issue")
         
     def fetch_translation(self, param_1, param_2):
+        
         url = f"https://link-bilingual-dictionary.p.rapidapi.com/{param_1}/{param_2}/{self.data}"  # Parameters from and to, then the word
 
         headers = {
