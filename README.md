@@ -1,10 +1,10 @@
 # Language Learning CLI Application
 
-Welcome to the Language Learning CLI Application! This Python command-line interface (CLI) tool helps users learn vocabulary, translate words, search for synonyms, and track their progress in various languages.
+Welcome to the Language Learning CLI Application! This Python command-line interface (CLI) tool helps users learn vocabulary, translate words, search for synonyms, add notes and track their progress in various languages.
 
 ## Overview
 
-The Language Learning CLI Application is designed to facilitate language learning in an efficient and user-friendly manner. It offers a variety of features that complement each other in functionality to aid users in their language learning journey, including vocabulary learning, translation between languages, synonym search, and progress tracking.
+The Language Learning CLI Application is designed to encourage language learning in an efficient and user-friendly manner. It offers a variety of features that complement each other in functionality to aid users in their language learning journey, including vocabulary learning, translation between languages, synonym search, note taking and progress tracking.
 
 ## Installation
 
@@ -27,9 +27,10 @@ Once the application is running, follow the on-screen instructions to navigate t
 
 - Register or login to your account.
 - Choose an option from the main menu:
-  - Learn vocabulary: Select a language and start learning 3 new words.
+  - Learn vocabulary: Select a language and start learning 3 new words and add notes to those words.
   - Translate words: Translate words between 3 different languages.
   - Search for synonyms: Find synonyms for any given word also multilingual.
+  - Notes: Review your previously taken notes its title, the language and the words they was on.
   - Check your progress: View your learning progress in each language.
 
 ## Features
@@ -38,6 +39,7 @@ Once the application is running, follow the on-screen instructions to navigate t
 - Vocabulary learning: Learn new words in English, French, or Italian.
 - Translation: Translate words between English, French, and Italian.
 - Synonym search: Find synonyms for any word you want.
+- Notes: View your previous notes and the words they relate to.
 - Progress tracking: Monitor your learning progress in each language.
 
 ## Architecture
@@ -53,9 +55,9 @@ This application is built using Python and utilizes the following modules:
 The project consists of the following files:
 
 - `main.py`: Contains the main CLI logic and user interaction.
-- `user.py`: Defines the `UserHandler` class for user registration, login, and progress tracking.
+- `user.py`: Defines the `UserHandler` class for user registration, login, note taking and progress tracking lodgic.
 - `language_api.py`: Implements the `Fetch_from_api` class for fetching vocabulary, synonyms, and translations from external APIs.
-- `data_structures.py`: Defines the database structure and session management functions.
+- `data_structures.py`: Defines the database schema and session management functions.
 
 ## CLI Script (`main.py`)
 
@@ -63,7 +65,7 @@ The `main.py` script is the entry point for the CLI application. It handles user
 
 ### Vocabulary Learning
 
-The **Vocabulary Learning** function allows users to learn three new words in each of the supported languages: English, French, and Italian. Upon selecting this option from the main menu, users are prompted to choose a language. After selecting a language, the application fetches three random words from an external API and displays them to the user. Users can then write down these words to aid in their learning process.
+The **Vocabulary Learning** function allows users to learn three new words in each of the supported languages: English, French, and Italian. Upon selecting this option from the main menu, users are prompted to choose a language. After selecting a language, the application fetches three random words from an external API and displays them to the user. Users can then write down these words to aid in their learning process or even take notes that can be later reviewed.
 
 ### Synonym Search
 
@@ -76,3 +78,7 @@ The **Translation** function enables users to translate words between the three 
 ### Progress Tracking
 
 The **Progress Tracking** function allows users to monitor their learning progress in each of the supported languages: English, French, and Italian. Upon selecting this option from the main menu, users can view the number of new words they have learned in each language. The application retrieves this information from the database and displays it to the user, providing valuable insights into their language learning journey.
+
+### Note Reviews
+
+The **Notes** function allows users to review notes that they have taken on a group of words they had learnt. Upon selecting this option from the main menu, users can view the selected language of the words, the words themselves, the note title they named and the note itself. The application retrieves this information from the database and displays it to the user.

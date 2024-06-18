@@ -57,7 +57,6 @@ class UserHandler:
                     user.words_learned_fr += 3
                 elif lang == 'it':
                     user.words_learned_it += 3
-                
                 # Commit the changes to the database
                 self.session.commit()
                 return True
